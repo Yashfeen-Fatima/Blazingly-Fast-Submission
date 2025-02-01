@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                DELETE FROM urls WHERE short_code = ?1;\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "e8695bf81ece7325ff65b62f7b5bd08584b8f5503c900bdcc0766d761c88eabb"
+}
