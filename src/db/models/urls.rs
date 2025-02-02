@@ -1,7 +1,7 @@
 use std::hash::{DefaultHasher, Hash, Hasher};
 
 use serde::Serialize;
-use sqlx::{Pool, Sqlite};
+use sqlx::{Pool, Postgres};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Urls {
@@ -25,10 +25,10 @@ impl Urls {
         }
     }
 
-    pub async fn add_to_db(&mut self, pool: &Pool<Sqlite>) -> sqlx::Result<i64> {
+    pub async fn add_to_db(&mut self, pool: &Pool<Postgres>) -> sqlx::Result<i64> {
         let saved_url_entry_id = sqlx::query!(
             r#"
-                INSERT INTO urls ( long_url, short_code ) VALUES ( ?1, ?2 );
+                INSERT INTO urls ( long_url, short_code ) VALUES ( $1, $2 );
             "#,
             self.long_url,
             self.short_code
@@ -40,10 +40,10 @@ impl Urls {
         Ok(saved_url_entry_id)
     }
 
-    pub async fn delete_from_db(&mut self, pool: &Pool<Sqlite>) -> sqlx::Result<u64> {
+    pub async fn delete_from_db(&mut self, pool: &Pool<Postgres>) -> sqlx::Result<u64> {
         let deleted_url_row_count = sqlx::query!(
             r#"
-                DELETE FROM urls WHERE short_code = ?1;
+                DELETE FROM urls WHERE short_code = $1;
             "#,
             self.short_code
         )
