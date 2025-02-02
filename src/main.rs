@@ -5,7 +5,7 @@ use axum::{
     Router,
 };
 use dotenv::var;
-use sqlx::sqlite::SqlitePoolOptions;
+use sqlx::postgres::PgPool;
 use tokio::net::TcpListener;
 use tracing::info;
 
@@ -25,7 +25,7 @@ async fn handle_short_url_redirect(
 
     let record = sqlx::query!(
         r#"
-            SELECT long_url FROM urls WHERE short_code = ?1;
+            SELECT long_url FROM urls WHERE short_code = $1;
         "#,
         short_code
     )
@@ -43,19 +43,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let conn_url = var("DATABASE_URL")?;
 
-    let conn_pool = SqlitePoolOptions::new()
-        .max_connections(5)
-        .connect(&conn_url)
-        .await?;
+    let conn_pool = PgPool::connect(&conn_url).await?;
 
     info!("Connection to database established successfully!");
 
     let listener = TcpListener::bind("127.0.0.1:8000").await?;
-    let app_router = Router::new()
-        .layer(get_trace_layer())
-        .route("/{short_url}", get(handle_short_url_redirect))
-        .nest("/api", establish_app_routes())
-        .with_state(AppState::init(conn_pool));
+    let app_router = Router::new();
+    .layer(get_trace_layer())
+    .route("/{short_url}", get(handle_short_url_redirect))
+    .nest("/api", establish_app_routes())
+    .with_state(AppState::init(conn_pool));
 
     info!(
         "Server rolling on port {}",
