@@ -60,6 +60,11 @@ If you have docker installed in your computer then you can directly containerize
     cargo r --release
     ```
 
+## Endpoints
+
+1. Create a short url
+
+
 ## Contributing
 
 We welcome contributions to this project! If you have ideas for improvements or additional features, feel free to fork the repo and create a pull request. Be sure to follow the general Rust best practices and maintain the performance-focused nature of the project.

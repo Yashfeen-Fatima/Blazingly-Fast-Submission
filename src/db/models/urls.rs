@@ -6,7 +6,7 @@ use sqlx::{Pool, Postgres};
 #[derive(Debug, Clone, Serialize)]
 pub struct Urls {
     pub long_url: String,
-    short_code: String,
+    pub short_code: String,
 }
 
 impl Urls {

@@ -17,6 +17,12 @@ pub struct Payload {
     pub long_url: String,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Response {
+    pub message: &'static str,
+    pub short_link: String,
+}
+
 pub async fn handle_add_url(
     State(ctx): State<AppContext>,
     Json(payload): Json<Payload>,
@@ -25,8 +31,12 @@ pub async fn handle_add_url(
     let ctx = ctx.lock().await;
 
     let Payload { long_url } = payload;
+    let mut url_instance = Urls::new(long_url);
 
-    Urls::new(long_url).add_to_db(&ctx.conn_pool).await.unwrap();
+    url_instance.add_to_db(&ctx.conn_pool).await.unwrap();
 
-    Ok("hello_world")
+    Ok(Json(Response {
+        message: "Short link generated successfully!",
+        short_link: format!("http://127.0.0.1:8000/{}", url_instance.short_code),
+    }))
 }
