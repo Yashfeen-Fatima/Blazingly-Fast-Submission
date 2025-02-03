@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO urls ( long_url, short_code ) VALUES ( $1, $2 );\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "51e457f5c14fdff36d8afd5e55a5c956c30ef6372aa8a94a88c58d8c621e1071"
+}
