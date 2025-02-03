@@ -25,8 +25,8 @@ impl Urls {
         }
     }
 
-    pub async fn add_to_db(&mut self, pool: &Pool<Postgres>) -> sqlx::Result<i64> {
-        let saved_url_entry_id = sqlx::query!(
+    pub async fn add_to_db(&mut self, pool: &Pool<Postgres>) -> sqlx::Result<()> {
+        sqlx::query!(
             r#"
                 INSERT INTO urls ( long_url, short_code ) VALUES ( $1, $2 );
             "#,
@@ -34,23 +34,21 @@ impl Urls {
             self.short_code
         )
         .execute(pool)
-        .await?
-        .last_insert_rowid();
+        .await?;
 
-        Ok(saved_url_entry_id)
+        Ok(())
     }
 
-    pub async fn delete_from_db(&mut self, pool: &Pool<Postgres>) -> sqlx::Result<u64> {
-        let deleted_url_row_count = sqlx::query!(
+    pub async fn delete_from_db(&mut self, pool: &Pool<Postgres>) -> sqlx::Result<()> {
+        sqlx::query!(
             r#"
                 DELETE FROM urls WHERE short_code = $1;
             "#,
             self.short_code
         )
         .execute(pool)
-        .await?
-        .rows_affected();
+        .await?;
 
-        Ok(deleted_url_row_count)
+        Ok(())
     }
 }

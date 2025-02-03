@@ -44,10 +44,20 @@ If you have docker installed in your computer then you can directly containerize
    cd url-shortener-rust
    ```
 
-2. Run Docker Compose file
+2. Install SQLX_CLI
 
     ```bash
-    docker-compose up --build
+    cargo sqlx db create
+    ```
+
+    ```bash
+    cargo sqlx migrate run
+    ```
+
+3. Run
+
+    ```bash
+    cargo r --release
     ```
 
 ## Contributing
